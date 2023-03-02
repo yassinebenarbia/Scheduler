@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ListRowFragment">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--the visible section goes here-->
+                <LinearLayout
+                    android:id="@+id/visible_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/time_format"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hoursText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="8"
+                            android:textSize="70sp" />
+
+                        <TextView
+                            android:id="@+id/separatorText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text=":"
+                            android:textSize="70sp" />
+
+                        <TextView
+                            android:id="@+id/minutesText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="50"
+                            android:textSize="70sp" />
+
+                        <TextView
+                            android:id="@+id/AMPM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="bottom"
+                            android:text="AM"
+                            android:textSize="50sp" />
+
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switch1"
+                        android:layout_width="74dp"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="44dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.893"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
+
+                <!--the drop down section goes here-->
+                <LinearLayout
+                    android:id="@+id/details_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <!--the label section goes here-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/label_label"
+                            android:layout_width="107dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="bottom"
+                            android:text="Label : "
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/label_input_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="Label"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+
+                    <!--the Note sections goes here-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/label_note"
+                            android:layout_width="107dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="bottom"
+                            android:text="Note: "
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/note_input_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="Note"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
