@@ -1,19 +1,17 @@
 package com.example.scheduler;
 
 import android.content.Context;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.scheduler.databinding.FragmentListRowBinding;
 
 import java.util.Arrays;
@@ -47,13 +45,18 @@ public class ListRowAdapter extends RecyclerView.Adapter<ListRowAdapter.ViewHold
 
         final boolean isExpanded = position==mExpandedPosition;
         holder.binding.detailsSection.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1:position;
-                TransitionManager.beginDelayedTransition(holder.binding.getRoot());
-//                holder.binding.detailsSection.setAnimation(dropDownAnimation);
+
+                // transition (expansion) of a row in the RecyclerView
+                Transition transition = new ChangeBounds();
+                transition.setDuration(400);
+                ViewGroup parent = (ViewGroup) v.getParent();
+                TransitionManager.beginDelayedTransition(parent , transition);
                 notifyDataSetChanged();
             }
         });

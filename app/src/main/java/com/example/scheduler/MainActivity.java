@@ -1,14 +1,15 @@
 package com.example.scheduler;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
-import com.afollestad.materialdialogs.DialogBehavior;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;
@@ -16,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
+import android.widget.PopupWindow;
 import android.widget.TimePicker;
 
 import com.example.scheduler.ui.main.SectionsPagerAdapter;
@@ -32,13 +33,13 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        createNotificationChannel();
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
@@ -46,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
-
         // the floating button stuff
         FloatingActionButton fab = binding.fab;
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,20 +55,50 @@ public class MainActivity extends AppCompatActivity {
             int minute= calendar.get(calendar.MINUTE);
             @Override
             public void onClick(View view) {
-
-                // irrelevant code
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
+                // TODO: Add the alarm to the local storage
+                // TODO: refreshing the UI such that the new alarm will geta displayed
                 TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Log.d("starting", "onTimeSet: nothing");
+                                // TODO: Store the Alarm in order to show it later
+                                onTimeChosen(hourOfDay,minute);
                             }
                         },hour,minute,false);
                 timePickerDialog.show();
             }
         });
+    }
+
+    // this method creates a notificatino channel
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O ){
+            String channelName = "scheduleChannelName";
+            String description = "aDescriptionOfTheSchedulerNotificationChannel";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel("ScheduledAlarm",channelName,importance);
+            notificationChannel.setDescription(description);
+
+            NotificationManager notificationManager  = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+    }
+
+    // Scheduling an alarm after the user chose the time
+    public void onTimeChosen (int hour,int minute){
+        Intent intent = new Intent(this,AlarmReceiver.class);
+        intent.setAction("com.example.scheduler");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(),25242221, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        // getting the selected time and appending them in a Calendar object
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND,1);
+        long alarmTime = calendar.getTimeInMillis();
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
     }
 }
