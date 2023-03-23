@@ -17,7 +17,7 @@ import androidx.core.app.NotificationManagerCompat;
  * <i>onReceivee </i>method
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    private String TAG = "Alarm goes brrr";
+    private String TAG = "Alarm is Set";
     private String msg;
     private String action;
 

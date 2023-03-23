@@ -17,6 +17,7 @@ import com.example.scheduler.databinding.FragmentListRowBinding;
 import java.util.Arrays;
 import java.util.List;
 
+// RecyclerView and the action when each row is clicked(animation)
 public class ListRowAdapter extends RecyclerView.Adapter<ListRowAdapter.ViewHolder>{
     private List<ListRow> items;
     private Context context;
@@ -61,6 +62,7 @@ public class ListRowAdapter extends RecyclerView.Adapter<ListRowAdapter.ViewHold
             }
         });
     }
+    // TODO : loading stored Alarms using AlarmDBManager and displaying them
     private void bind(@NonNull ViewHolder holder, int position){
         // loading data
         String separator  = ":";

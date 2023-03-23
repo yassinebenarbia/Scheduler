@@ -15,14 +15,13 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.PopupWindow;
 import android.widget.TimePicker;
 
 import com.example.scheduler.ui.main.SectionsPagerAdapter;
 import com.example.scheduler.databinding.ActivityMainBinding;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
@@ -99,6 +98,22 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND,1);
         long alarmTime = calendar.getTimeInMillis();
 
+        storeChosenAlarm();
+
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
+    }
+    // storing the chosen Alarm goes here
+    public void storeChosenAlarm(){
+        AlarmDBManager alarmDBManager = new AlarmDBManager(getBaseContext());
+        try {
+            alarmDBManager.open();
+
+        } catch (SQLException e) {
+            System.out.println("Could not open DB");
+            throw new RuntimeException(e);
+        }
+
+        alarmDBManager.close();
+
     }
 }

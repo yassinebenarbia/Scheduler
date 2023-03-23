@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * A class that englobe the attributes of an alarm
+ * A class that encompass the attributes of an alarm
  */
 public class Alarm {
     private UUID uuid;
@@ -16,7 +16,80 @@ public class Alarm {
     private Time time;
     private Date startingPoint;
     private Integer cycleLength;
-    private ArrayList<Integer> checkPoints;
+    private String mountingPoints;
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Boolean getState() {
+        return state;
+    }
+
+    public void setState(Boolean state) {
+        this.state = state;
+    }
+
+    /**
+     * gets the Time object that the alarm starts from
+     * @return Time
+     */
+    public Time getTime() {
+        return time;
+    }
+    public long getTimeInMills(){
+        return time.getTime();
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
+    }
+
+
+    public Date getStartingPoint() {
+        return startingPoint;
+    }
+
+    public void setStartingPoint(Date startingPoint) {
+        this.startingPoint = startingPoint;
+    }
+
+    public Integer getCycleLength() {
+        return cycleLength;
+    }
+
+    public void setCycleLength(Integer cycleLength) {
+        this.cycleLength = cycleLength;
+    }
+
+    public ArrayList<Integer> getCheckPoints() {
+        return checkPoints;
+    }
+
+    public void setCheckPoints(ArrayList<Integer> checkPoints) {
+        this.checkPoints = checkPoints;
+    }
+
+    private ArrayList<Integer> checkPoints;
 
 }
