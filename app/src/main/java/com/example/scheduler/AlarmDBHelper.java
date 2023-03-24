@@ -20,6 +20,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
     private static final String ALARM_LABEL = "label";
     private  static final String ALARM_NOTE = "note";
     private static final String ALARM_ENABLED = "enabled";
+    private static final String ALARM_CURRENT_STATE_INDEXER = "currentStateIndexer";
     private static final String CYCLE_TABLE_NAME = "Cycle";
     private static final String CYCLE_ID = "uuid";
     private static final String CYCLE_NAME = "name";
@@ -39,22 +40,26 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
     // create a DB schema
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // can add "AUTOINCREMENT" to the table id
+        // Can add "AUTOINCREMENT" to the table id
+        // The alarmTime is when the alarm is triggered in milliseconds with respect to one day
+        // 4 example: 08:30 or 10:20 or 15:55 or ...
+        // ToDo : add the just next alarm
         String CREATE_ALARM_TABLE = "CREATE TABLE " + ALARM_TABLE_NAME +"("
                                       +ALARM_ID +" UUID PRIMARY KEY, "
-                                      +ALARM_TIME_IN_MILLS + " LONG NOT NULL, "
                                       +ALARM_LABEL + "TEXT, "
                                       +ALARM_NOTE + "TEXT, "
                                       +ALARM_ENABLED + "BIT, "
-                                      +"FOREIGN KEY ("+ALARM_TABLE_NAME+"_"+ALARM_ID+") "
-                                      +"REFERENCES "+ALARM_TABLE_NAME+"("+ALARM_ID+")"
+                                      +ALARM_TIME_IN_MILLS + " LONG NOT NULL, "
+                                      +ALARM_CURRENT_STATE_INDEXER + "NUMBER, "
+                                      +"FOREIGN KEY ("+CYCLE_TABLE_NAME+"_"+CYCLE_ID+") "
+                                      +"REFERENCES "+CYCLE_TABLE_NAME+"("+CYCLE_ID+")"
                                       +")";
         db.execSQL(CREATE_ALARM_TABLE);
 
         String CREATE_CYCLE_TABLE = "CREATE TABLE " + CYCLE_TABLE_NAME +"("
                                     +CYCLE_ID + "UUID PRIMARY KEY, "
                                     +CYCLE_NAME + "TEXT, "
-                                    +CYCLE_MOUNTING_DATE + "DATE, "
+                                    +CYCLE_MOUNTING_DATE + "Long, "
                                     +CYCLE_LENGTH + "NUMBER"
                                     +")";
         db.execSQL(CREATE_CYCLE_TABLE);
@@ -63,4 +68,10 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public static String getAlarmTableName(){
+        return ALARM_TABLE_NAME;
+    }
+    public static String getCycleTableName(){
+        return CYCLE_TABLE_NAME;
+    }
 }

@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Cycle {
+    //ToDo : need to create a constructor
     private UUID  uuid ;
     private String name;
-    private Date mountingDate;
+    private Long mountingDateInMillis;
+    private  Integer cycleLength;
 
     public UUID getUuid() {
         return uuid;
@@ -24,12 +26,12 @@ public class Cycle {
         this.name = name;
     }
 
-    public Date getMountingDate() {
-        return mountingDate;
-    }
 
-    public void setMountingDate(Date mountingDate) {
-        this.mountingDate = mountingDate;
+    public Long getMountingDateInMillis() {
+        return mountingDateInMillis;
+    }
+    public void setMountingDateInMillis(Long mountingDateInMillis) {
+        this.mountingDateInMillis = mountingDateInMillis;
     }
 
     public Integer getCycleLength() {
@@ -39,7 +41,5 @@ public class Cycle {
     public void setCycleLength(Integer cycleLength) {
         this.cycleLength = cycleLength;
     }
-
-    private Integer cycleLength;
 
 }
