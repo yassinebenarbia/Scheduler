@@ -12,8 +12,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 /**
- * When the <i>AlarmManager </i>triggers the alarm the <i>AlarmReceiver</i>, it sends a
- * message to the system, which is received  by the <i>AlarmReceiver</i>by the
+ * after the <i>AlarmManager </i>triggers an alarm the <i>AlarmReceiver</i> will start,how ?, the <i>AlarmManager</i> sends a
+ * message to the system, which is received  by the <i>AlarmReceiver</i> captured by
  * <i>onReceivee </i>method
  */
 public class AlarmReceiver extends BroadcastReceiver {
@@ -25,6 +25,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         action = "com.example.scheduler";
         msg = "Alarm goes on!";
+        // if the alarm received by onReceive method is registered by an actions
+        // equals to the "action" variable seated above, meaning that it's being created
+        // by this Scheduler app
         if (intent.getAction().equals(action)) {
             Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
             toast.show();

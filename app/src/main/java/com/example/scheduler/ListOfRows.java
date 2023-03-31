@@ -51,6 +51,8 @@ public class ListOfRows extends Fragment {
         listRows.add(ListRow.newInstance(date1,5,"",""));
         listRows.add(ListRow.newInstance(date1,5,"",""));
         listRows.add(ListRow.newInstance(date1,5,"",""));
+        listRows.add(ListRow.newInstance(date1,5,"",""));
+        listRows.add(ListRow.newInstance(date1,5,"",""));
         listRows.add(ListRow.newInstance(date2,5,"",""));
         return listRows;
     }

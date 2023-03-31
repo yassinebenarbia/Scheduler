@@ -28,6 +28,14 @@ public class Alarm {
         this.mountingPoints = mountingPoints;
         this.time = new Time(time);
     }
+    Alarm(String uuid, Boolean state, Long time, String mountingPoints){
+        this.uuid = UUID.fromString(uuid);
+        this.label="";
+        this.note="";
+        this.state=state;
+        this.mountingPoints=mountingPoints;
+        this.time=new Time(time);
+    }
 
     private UUID uuid;
     private String label;

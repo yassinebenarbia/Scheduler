@@ -9,29 +9,38 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TimePicker;
+import android.widget.Toolbar;
 
 import com.example.scheduler.ui.main.SectionsPagerAdapter;
 import com.example.scheduler.databinding.ActivityMainBinding;
 
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
- *
  * setting the ViewPager with the adapter and
  * the TabLayout with the ViewPager
  */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private MaterialToolbar toolbar;
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +49,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         createNotificationChannel();
 
+        toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+
+        drawerLayout = binding.layoutDrawer;
+        // Todo : add the AppBar to the ActionBarDrawerToggle, see it's constructor to know more
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        TabLayout tabs = binding.tabs;
-        tabs.setupWithViewPager(viewPager);
+            }
+
+            // Assumption: the position is a number that represent the order of the current page
+            // with respect to all the pages putted in the viewPager
+            @Override
+            public void onPageSelected(int position) {
+                Log.i("onPageSelected","Page Number: "+String.valueOf(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+//        TabLayout tabs = layoutBinding.tabs;
+//        tabs.setupWithViewPager(viewPager);
+
         // the floating button stuff
         FloatingActionButton fab = binding.fab;
         fab.setOnClickListener(new View.OnClickListener() {
+            // requesting the current hour and minute of the day
             final Calendar calendar = Calendar.getInstance();
             int hour = calendar.get(calendar.HOUR_OF_DAY);
             int minute= calendar.get(calendar.MINUTE);
@@ -69,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // this method creates a notificatino channel
+    // this method creates a notification channel
     private void createNotificationChannel() {
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O ){
             String channelName = "scheduleChannelName";
@@ -98,22 +141,45 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND,1);
         long alarmTime = calendar.getTimeInMillis();
 
-        storeChosenAlarm();
+        Alarm alarm = new Alarm(UUID.randomUUID().toString(),
+                true,
+                alarmTime,
+                "1,2,3,4");
 
+        // storing the chosen alarm on DB
+        storeChosenAlarm(alarm);
+
+        //setting timer section "may be discussed later"
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
     }
-    // storing the chosen Alarm goes here
-    public void storeChosenAlarm(){
+
+    //  after the user chooses the time he want to use this function will be executed
+    //  storing the chosen Alarm goes here
+    public void storeChosenAlarm(Alarm alarm){
         AlarmDBManager alarmDBManager = new AlarmDBManager(getBaseContext());
         try {
             alarmDBManager.open();
+            // need to be able to retrieve the Cycle that the alarm belongs to
+//            alarmDBManager.addAlarm(alarm,);
 
         } catch (SQLException e) {
             System.out.println("Could not open DB");
             throw new RuntimeException(e);
         }
-
         alarmDBManager.close();
+    }
+    // handling the selection of the cycle on the sidebar
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    // toDo: what should the app do wen the user destroys it
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
