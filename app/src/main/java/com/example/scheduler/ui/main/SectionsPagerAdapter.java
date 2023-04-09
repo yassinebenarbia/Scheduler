@@ -39,9 +39,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
         // Adding fragments to the list of fragments shown in the viewPager
         // the first is a list of "carts" and the latter is an empty page
+        // ToDo: assign a unique identifier (UUID) for each fragment and \
+        //  then pull it from each fragment and create a new Cycle object
         fragmentList.add(ListOfRows.newInstance("hello","world"));
         fragmentList.add(ListOfRows.newInstance("hello","world"));
-//        fragmentList.add(ListRowFragment.newInstance("Time","State"));
     }
 
     @Override

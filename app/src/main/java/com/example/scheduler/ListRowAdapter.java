@@ -49,6 +49,7 @@ public class ListRowAdapter extends RecyclerView.Adapter<ListRowAdapter.ViewHold
 
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            // ToDo : we can put a unique identifier for each fragment
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1:position;

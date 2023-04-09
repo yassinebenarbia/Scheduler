@@ -1,6 +1,5 @@
 package com.example.scheduler;
 
-import android.os.Binder;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.scheduler.databinding.FragmentListOfRowsBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +27,8 @@ import java.util.List;
 public class ListOfRows extends Fragment {
     // TODO: Rename parameter arguments, choose names that match \
     //  the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "name";
+    private static final String ARG_PARAM2 = "UUID";
 
     // TODO : Rename and change types of parameters
 
@@ -59,14 +59,18 @@ public class ListOfRows extends Fragment {
 
     /**
      * instantiating the list of rows/cart widgets
+     *
      */
-    // TODO : Rename and change types and number of parameters
     // TODO : Add changing theme feature
-    public static ListOfRows newInstance(String param1, String param2) {
+    // ToDo : is it possible to pass object with bundle ?
+    public static ListOfRows newInstance(String fragmentName, String fragmentUuid) {
         ListOfRows fragment = new ListOfRows();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, fragmentName);
+        // ToDo: add reference the the Cycle Object created
+        Cycle cycle = new Cycle();
+        args.putString(ARG_PARAM2, fragmentUuid);
+//        args.putSerializable(cycle.getUuid().toString(), (Serializable) cycle);
         fragment.setArguments(args);
         return fragment;
 

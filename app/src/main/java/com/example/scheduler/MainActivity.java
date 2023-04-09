@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,28 +20,34 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TimePicker;
-import android.widget.Toolbar;
 
 import com.example.scheduler.ui.main.SectionsPagerAdapter;
 import com.example.scheduler.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;
 
 /**
- * setting the ViewPager with the adapter and
- * the TabLayout with the ViewPager
+ * main activity stuff 4n
  */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MaterialToolbar toolbar;
     public DrawerLayout drawerLayout;
+    public NavigationView navigationView;
+    private Menu menu;
+    ViewPager viewPager;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+    private  Menu bodyMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,44 +56,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         createNotificationChannel();
 
-        toolbar = binding.toolbar;
-        setSupportActionBar(toolbar);
-
-        drawerLayout = binding.layoutDrawer;
-        // Todo : add the AppBar to the ActionBarDrawerToggle, see it's constructor to know more
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.open, R.string.close);
-
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        syncDrawerAndToolbar();
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
-        ViewPager viewPager = binding.viewPager;
+        viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
+
+        // Listening to the current page the user is on, on the PageAdapter
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            // Assumption: the position is a number that represent the order of the current page
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            // The position is a number represent the order of the current page
             // with respect to all the pages putted in the viewPager
             @Override
             public void onPageSelected(int position) {
-                Log.i("onPageSelected","Page Number: "+String.valueOf(position));
+                Drawable navigationIcon = toolbar.getNavigationIcon();
+                switch (position) {
+                    case 0:
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        break;
+                    default:
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        break;
+                }
             }
-
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
-
-//        TabLayout tabs = layoutBinding.tabs;
-//        tabs.setupWithViewPager(viewPager);
+        TabLayout tabs = binding.tabs;
+        tabs.setupWithViewPager(viewPager);
 
         // the floating button stuff
         FloatingActionButton fab = binding.fab;
@@ -110,9 +109,38 @@ public class MainActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+
+        // setting the menu
+        navigationView = binding.navigationView;
+
+        menu = navigationView.getMenu();
+
+        MenuItem menuItem =  menu.getItem(0);
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                navigationView.inflateMenu(R.menu.body);
+                // show an interface for the user to custimize the
+                // cycle, store it then show it
+                menu.add("helo");
+                ItemListDialogFragment.newInstance(1).show(getSupportFragmentManager(),"dialog");
+                Log.i("menu size",String.valueOf(menu.size()));
+                return true;
+            }
+        });
     }
 
-    // this method creates a notification channel
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.body,menu);
+        bodyMenu=menu;
+        System.out.println(bodyMenu.size());
+        System.out.println("hello there");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void addItem(){}
+    // this method creates a notification channel for that the AlarmReceiver to handle
     private void createNotificationChannel() {
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O ){
             String channelName = "scheduleChannelName";
@@ -168,16 +196,22 @@ public class MainActivity extends AppCompatActivity {
         }
         alarmDBManager.close();
     }
-    // handling the selection of the cycle on the sidebar
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+
+    // synchronizing between the DrawerLayout and the Toolbar
+    public void syncDrawerAndToolbar(){
+        toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+
+        drawerLayout = binding.layoutDrawer;
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
-    // toDo: what should the app do wen the user destroys it
+    // handling the selection of the cycle on the sidebar
+
+    // ToDo: what should the app do wen the user destroys it ?
     @Override
     protected void onDestroy() {
         super.onDestroy();

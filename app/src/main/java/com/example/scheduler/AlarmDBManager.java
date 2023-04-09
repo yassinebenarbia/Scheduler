@@ -43,7 +43,7 @@ public class AlarmDBManager {
        values.put("label", alarm.getLabel());
        values.put("Alarm_uuid",cycleUuid.toString());
 
-       return dataBase.insert("alarm",null,values) != -1;
+       return dataBase.insert("Alarm",null,values) != -1;
     }
 
     /**

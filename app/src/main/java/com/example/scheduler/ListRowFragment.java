@@ -38,7 +38,8 @@ public class ListRowFragment extends Fragment{
     public static ListRowFragment newInstance(String param1, String param2) {
         // passing info into a new instantiated ListRowFragment through the new instance method
         ListRowFragment fragment = new ListRowFragment();
-//        Bundle args = new Bundle();
+        // ToDo : we can put a unique identifier for each fragment
+        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
 //        fragment.setArguments(args);
